@@ -14,6 +14,8 @@ const Login_Register = document.getElementById("Login_Register");
 const Back = document.getElementById("Back");
 
 
+
+
 // متغيرات قمت بكتابتها لكي افصلها من متفيرات صفحةانشاء حساب وأستعملها لانهاء اخزن قيم داخلها
 const Input_username = document.getElementById("Input_username");
 const Input_password = document.getElementById("Input_password");
@@ -32,7 +34,6 @@ const input_Phone_Register = document.getElementById("input_Phone_Register");
 const but_send_Register = document.getElementById("but_send_Register");
 var token = "";
 function login() {
-
     axios({
         method: 'post',
         url: 'https://tarmeezacademy.com/api/v1/login',
@@ -48,15 +49,18 @@ function login() {
     }).then((result) => {
         console.log(result.data);
         token = localStorage.setItem("token", result.data.token);
+        username = localStorage.setItem("username", Input_username.value );
+        console.log(username);
+        window.location.href = "http://127.0.0.1:5500/HomePage/HomePage.html"
+
 
     }).catch((err) => {
-        alert(err.response.data.message);
+        window.location.href = "http://127.0.0.1:5500/Page_Login/LoginPage.html"
     })
 
 }
 
 function RegisterGo() {
-
     axios({
         method: 'post',
         url: 'https://tarmeezacademy.com/api/v1/register',
@@ -74,6 +78,10 @@ function RegisterGo() {
         .then((result) => {
             console.log(result.data);
             token = localStorage.setItem("token", result.data.token);
+            username = localStorage.setItem("username", Input_username.value );
+            
+            window.location.href = "http://127.0.0.1:5500/HomePage/HomePage.html"
+
         })
         .catch((err) => {
             alert(err.response.data.message);
