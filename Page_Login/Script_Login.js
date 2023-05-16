@@ -49,8 +49,8 @@ function login() {
     }).then((result) => {
         console.log(result.data);
         token = localStorage.setItem("token", result.data.token);
-        username = localStorage.setItem("username", Input_username.value );
-        console.log(username);
+        username = localStorage.setItem("username", result.data.user.username);
+        id_account = localStorage.setItem("id_account", result.data.user.id );
         window.location.href = "http://127.0.0.1:5500/HomePage/HomePage.html"
 
 
@@ -78,8 +78,8 @@ function RegisterGo() {
         .then((result) => {
             console.log(result.data);
             token = localStorage.setItem("token", result.data.token);
-            username = localStorage.setItem("username", Input_username.value );
-            
+            username = localStorage.setItem("username", result.data.user.username);
+            id_account = localStorage.setItem("id_account", result.data.user.id );
             window.location.href = "http://127.0.0.1:5500/HomePage/HomePage.html"
 
         })

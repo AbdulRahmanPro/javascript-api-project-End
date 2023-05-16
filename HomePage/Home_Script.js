@@ -66,14 +66,14 @@ function Edit_but() {
 function Chake_Show_but(callback) {
   var postElements = document.querySelectorAll(".text-light");
 
-  postElements.forEach(function(postElement) {
+  postElements.forEach(function (postElement) {
     var usernameElement = postElement.querySelector("#username");
 
     if (usernameElement) {
       var username = usernameElement.textContent;
       console.log(username);
 
-      if (username === "@"+localStorage.getItem("username")) {
+      if (username === "@" + localStorage.getItem("username")) {
         var but_delete = postElement.querySelector("#but_delete");
         var but_edit = postElement.querySelector("#but_edit");
 
@@ -126,10 +126,10 @@ function Form_Crate_Post() {
   <button type="button" class="btn btn-dark" id="but_close" onclick="">Close</button>
   </div>
   `
-    // modle form add post
+  // modle form add post
 
   Sec_container.appendChild(FormInput_add_Post)
-    but_close.addEventListener("click", function () {
+  but_close.addEventListener("click", function () {
     Sec_container.removeChild(FormInput_add_Post)
   })
 }
@@ -167,20 +167,20 @@ function Add_Post() {
 // دالة مسؤولة عن إضافة منشور
 
 // دالة حذف منشور
-function delete_post(id){
+function delete_post(id) {
 
-    axios({
-      method: 'delete',
-      url: `https://tarmeezacademy.com/api/v1/posts/${id}`,
-      headers: {
-        'Accept': 'application/json',
-        'Authorization': `Bearer  ${authToken}`
-      },
+  axios({
+    method: 'delete',
+    url: `https://tarmeezacademy.com/api/v1/posts/${id}`,
+    headers: {
+      'Accept': 'application/json',
+      'Authorization': `Bearer  ${authToken}`
+    },
+  })
+    .then(res => {
+      console.log(res)
+      location.reload()
     })
-      .then(res => {
-        console.log(res)
-        location.reload()
-      })
 }
 // دالة حذف منشور
 
@@ -203,23 +203,23 @@ function Edit_Post_Request(id, title, body) {
 }
 
 // دالة مسؤولة عن تعديل منشور
- async function Edit_Post(id) {
+async function Edit_Post(id) {
   Form_Crate_Post()
   var decodedData = JSON.parse(decodeURIComponent(id));
-   new Promise((resolve, reject) => {
+  new Promise((resolve, reject) => {
 
-    if(resolve){
+    if (resolve) {
       resolve()
     }
-    else{
+    else {
       reject()
     }
-   })
+  })
     .then(() => {
-    return  new Promise((resolve, reject) => {
+      return new Promise((resolve, reject) => {
         var form = document.getElementById("FormInput_add_Post")
         form.getElementsByTagName("h1")[0].innerHTML = "Edit a post"
-        form.getElementsByTagName("input")[0].value = decodedData.title 
+        form.getElementsByTagName("input")[0].value = decodedData.title
         form.getElementsByTagName("textarea")[0].value = decodedData.body
         form.getElementsByTagName("button")[0].innerHTML = "Edit"
         form.getElementsByTagName("button")[0].addEventListener("click", function () {
@@ -229,30 +229,6 @@ function Edit_Post_Request(id, title, body) {
     })
     .then(() => {
     })
-
-
-
-
-  // var decodedData = JSON.parse(decodeURIComponent(id));
-  // var form = document.getElementById("FormInput_add_Post")
-  // axios({
-  //   method: 'put',
-  //   url: `https://tarmeezacademy.com/api/v1/posts/${decodedData.id}`,
-  //   headers: {
-  //     'Accept': 'application/json',
-  //     'Authorization': `Bearer  ${authToken}`
-  //   },
-  //   data: {
-  //     title: decodedData.title,
-  //     body: decodedData.body
-  //   }
-  // })
-  //   .then(res => {
-  //     Form_Crate_Post()
-  //     form.getElementsByTagName("h1")[0].innerHTML = "Edit a post"
-  //     form.getElementsByTagName("input")[0].value = decodedData.title 
-  //     form.getElementsByTagName("textarea")[0].value = decodedData.body
-  //     form.getElementsByTagName("button")[0].innerHTML = "Edit"})
 }
 
 // دالة مسؤولة عن عرض المنشورات
@@ -278,10 +254,10 @@ function ShowPost(callback, int) {
         divCrate.innerHTML = `
           <div class="shadow-sm" id="title" style="background-color: #242424;"> 
             <img id="icon" src="${res.data.data[i].author.profile_image}" alt="">
-            <h1 id="username">@${res.data.data[i].author.username}</h1>
+            <h1 onclick="Show_Profile(${res.data.data[i].author.id})" id="username">@${res.data.data[i].author.username}</h1>
             <div class="Box_Edit">
               <button style="display: none;" class="btn btn-danger" id="but_delete" onclick="delete_post(${res.data.data[i].id})">Delete</button>
-              <button style="display: none;" class="btn btn-warning" id="but_edit" data-toggle="modal" data-target="#FormInput_add_Post" onclick="Edit_Post('${encodedData}')">Edit</button>
+              <button style="display: none;" class="btn btn-warning" id="but_edit"  onclick="Edit_Post('${encodedData}')">Edit</button>
             </div>
           </div>
           <div class="content">
@@ -292,7 +268,7 @@ function ShowPost(callback, int) {
             <h1>${res.data.data[i].title}</h1>
             <p>${res.data.data[i].body}</p>
             <hr>
-            <p>(${res.data.data[i].comments_count}) Comment</p>
+            <p  onclick="Show_comment('${id}')">(${res.data.data[i].comments_count}) Comment</p>
           </div>
         `;
         posts[0].appendChild(divCrate);
@@ -304,12 +280,42 @@ function ShowPost(callback, int) {
 }
 
 
+function Show_comment(id) {
 
+  axios({
+    method: 'get',
+    url: `https://tarmeezacademy.com/api/v1/posts/${id}`,
+    headers: {
+      accept: 'application/json',
+      contentType: 'application/json',
+    }
+  })
+  .then(res => {
+    console.log(res.data.data.comments)
+    var comment = document.createElement("div");
+    comment.setAttribute("class", "shadow-lg");
+    comment.setAttribute("id", "comment1");
+    comment.innerHTML = `
+      <h3>@${res.data}</h3>
+      <p>Quis odit est quo officia facilis</p>
+    `
+    var commentContainer = document.getElementById("comment");
+    commentContainer.appendChild(comment);
+  });
+}
+
+
+function Show_Profile(id) {
+  var user = document.getElementById("username");
+
+  window.location.href = `../Page_Profile/Page_Profile.html?id=${id}`;
+
+}
 // دالة مسؤولة عن عرض المنشورات
 
 add_post.addEventListener("click", function () {
   Form_Crate_Post()
-   Add_Post()
+  Add_Post()
 })
 Post_increase_system()
 but_login.addEventListener("click", function () {
